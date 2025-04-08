@@ -1,0 +1,21 @@
+PEP: 9999
+Title: Project status markers in the simple index
+Author: William Woodruff <william@yossarian.net>
+Sponsor: TODO
+PEP-Delegate: TODO
+Discussions-To: https://discuss.python.org/t/79356
+Status: Draft
+Type: Standards Track
+Topic: Packaging
+Created: 08-Apr-2025
+Post-History: `03-Feb-2025 <https://discuss.python.org/t/79356/>`__
+
+Abstract
+========
+
+Rationale and Motivation
+========================
+
+Specification
+=============
+
