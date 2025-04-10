@@ -167,7 +167,7 @@ HTML index
 The following changes are made to the
 :ref:`simple repository API <packaging:simple-repository-api-base>`:
 
-* The index **SHALL** define the ```pypi:repository-version`` as ``1.4``.
+* The index **SHALL** define the ``pypi:repository-version`` as ``1.4``.
 * When a project has one or more statuses, the index **SHALL** add
   an appropriate ``pypi:project-status`` meta tag for each.
 
@@ -176,6 +176,7 @@ For example, the following would be a valid HTML index response for
 ``quarantined``:
 
 .. code-block:: html
+    :emphasize-lines: 5-6
 
     <!DOCTYPE html>
     <html>
@@ -201,13 +202,16 @@ The following changes are made to the
 
 * The index **SHALL** define the ``meta.api-version`` as ``1.4``.
 * When a project has one or more statuses, the index **SHALL** add each status
-  to the ``project-status`` key at the top-level of the JSON response.
+  to the ``project-status`` key to the JSON response. When no statuses
+  are present, the ``project-status`` key **MAY** be omitted entirely,
+  left as `null`, or as an empty array.
 
 For example, the following would be a valid JSON index response for
 ``sampleproject`` after is has been marked as both ``archived`` and
 ``quarantined``:
 
 .. code-block:: json
+    :emphasize-lines: 5-8
 
     {
       "meta": {
