@@ -188,7 +188,7 @@ For example, the following would be a valid HTML index response for
       </head>
       <body>
         <h1>Links for sampleproject</h1>
-    </body>
+      </body>
     </html>
 
 Observe that, per the ``quarantined`` semantics above, the index response
@@ -198,7 +198,7 @@ JSON index
 ~~~~~~~~~~
 
 The following changes are made to the
-:ref:`JSON simple API <packaging:simple-repository-api-json>`:
+:ref:`JSON simple index <packaging:simple-repository-api-json>`:
 
 * The index **SHALL** define the ``meta.api-version`` as ``1.4``.
 * When a project has one or more statuses, the index **SHALL** add each status
@@ -285,6 +285,72 @@ Educating the Python community about this PEP has two aspects:
   if this PEP is accepted, the authors of this PEP will coordinate with
   the maintainers of popular installers (e.g. ``pip``) to help each determine
   the extent to which they wish to surface project statuses.
+
+Rejected Ideas
+==============
+
+Using "reserved" keys
+---------------------
+
+One alternative to this PEP is to avoid standardizing project status
+markers directly, but instead leverage existing mechanisms within the standards
+to communicate them in a non-standard fashion.
+
+For example, the `JSON simple index <packaging:simple-repository-api-json>`_
+says the following:
+
+    Keys (at any level) with a leading underscore are reserved as private for
+    index server use. No future standard will assign a meaning to any such key.
+
+In effect, this means that the following would be standards-compliant:
+
+.. code-block:: json
+    :emphasize-lines: 5-8
+
+    {
+      "meta": {
+        "api-version": "1.4"
+      },
+      "_project-status": [
+        "archived",
+        "quarantined"
+      ],
+      "alternate-locations": [],
+      "files": [],
+      "name": "sampleproject",
+      "versions": [
+        "1.2.0",
+        "1.3.0",
+        "1.3.1",
+        "2.0.0",
+        "3.0.0",
+        "4.0.0"
+      ]
+    }
+
+However, this approach has several drawbacks:
+
+* Standards-aligned tools (such as ``pip``, ``pip-audit``, and ``uv``)
+  may find it unacceptable to use a "reserved" key, since that key will
+  have no standard semantics or compatibility properties.
+* The "reserved" approach is only suitable for the JSON simple index;
+  no equivalent mechanism exists for the HTML simple index.
+  This would disadvantage consumers of the HTML simple index, as well as
+  mirror implementations that may consume the JSON index but only expose
+  an HTML index.
+
+Project markers in PyPI's non-standard JSON API
+-----------------------------------------------
+
+Another standardization-avoidance alternative is to expose project status
+markers, but only in PyPI's
+`non-standard JSON API <https://docs.pypi.org/api/json/>`_. PyPI has full
+control over the layout of this API, and could include a ``project-status``
+or similar key without needing a PEP or underscore prefix.
+
+This has similar drawbacks as the "reserved" keys approach above,
+and more generally deepens the differences between the standard
+and non-standard APIs.
 
 Copyright
 =========
