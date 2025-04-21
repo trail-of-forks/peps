@@ -75,11 +75,11 @@ the "status" of a project:
 
 In summary: there are multiple ways to communicate the "status" of a project in
 Python packaging, but none of these mechanisms are *simultaneously* (1)
-machine-readable, (2) general, (3) index-agnostic, and (4) updatable without
-pushing a new distribution:
+machine-readable, (2) general, (3) index-agnostic, and (4) updatable across
+the entire project (instead of per-release or per-distribution).
 
 .. csv-table::
-    :header: "Mechanism", "Machine-readable?", "General?", "Index-agnostic?", "Updatable?"
+    :header: "Mechanism", "Machine-readable?", "General?", "Index-agnostic?", "Project updatable?"
 
     "Trove classifiers", "✅", "✅", "✅", "❌"
     "Yanking", "✅", "❌", "✅", "✅"
