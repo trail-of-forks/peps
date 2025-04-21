@@ -22,9 +22,9 @@ Rationale and Motivation
 
 The "status" of a project is an important piece of metadata, made more important
 by growth in both the breadth and depth of the Python packaging ecosystem.
-Both humans and tools use the a project's status (or proxies for its status,
+Both humans and tools use project statuses (or proxies for status,
 such as recent activity) to determine whether the project is maintained or
-otherwise suitable for inclusion as a software component.
+otherwise suitable for consumption.
 
 Python packaging has at least three different mechanisms for communicating
 the "status" of a project:
@@ -34,14 +34,14 @@ the "status" of a project:
    `maintained by the PyPA <https://github.com/pypa/trove-classifiers>`_,
    and includes the ``Development Status`` hierarchy. For example, a
    distribution can include the ``Development Status :: 7 - Inactive``
-   to indicate that the distribution's project is inactive.
+   classifier to indicate that the distribution's project is inactive.
 
    Trove classifiers are flexible, but also come with significant limitations:
    they're machine-readable and are rendered on indices like PyPI, but
    they also require the maintainer to push one or more *new* distributions
    each time they wish to update their project's development status.
    Furthermore, because distributions are *de facto* immutable in the Python
-   packaging ecosystems, older distributions can't have their classifiers
+   packaging ecosystem, older distributions can't have their classifiers
    updated to reflect the current status of the project.
 
 2. Indices can mark distributions and releases as "yanked", as originally
@@ -202,7 +202,7 @@ The following changes are made to the
 
 * The index **SHALL** define the ``meta.api-version`` as ``1.4``.
 * When a project has one or more statuses, the index **SHALL** add each status
-  to the ``project-status`` key to the JSON response. When no statuses
+  to the ``project-status`` key in the JSON response. When no statuses
   are present, the ``project-status`` key **MAY** be omitted entirely,
   left as `null`, or as an empty array.
 
