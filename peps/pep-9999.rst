@@ -99,13 +99,19 @@ Project status markers
 
 This PEP proposes the following project status markers.
 
-A project **MAY** have multiple status markers. When evaluating multiple status
-markers for index behavior, the index **MUST** use the strongest negative
-requirement. For example, if a project is both archived and quarantined, the
-index **MUST NOT** offer any distributions of the project for download.
+A project **MUST** have exactly one project status marker at any given time.
 
 Indices **MAY** implement any subset of the status markers specified in this
 PEP, as applicable.
+
+``active``
+~~~~~~~~~~
+
+Description: The project is active. This is the default status for a project.
+
+Index semantics: none.
+
+Installer semantics: none.
 
 ``archived``
 ~~~~~~~~~~~~
@@ -168,21 +174,20 @@ The following changes are made to the
 :ref:`simple repository API <packaging:simple-repository-api-base>`:
 
 * The index **SHALL** define the ``pypi:repository-version`` as ``1.4``.
-* When a project has one or more statuses, the index **SHALL** add
-  an appropriate ``pypi:project-status`` meta tag for each.
+* The index **SHOULD** add an appropriate ``pypi:project-status`` meta tag, with
+  a ``content`` of the project's status marker. The index **MAY** choose to omit
+  the ``pypi:project-status`` meta tag if the project is marked as ``active``.
 
 For example, the following would be a valid HTML index response for
-``sampleproject`` after is has been marked as both ``archived`` and
-``quarantined``:
+``sampleproject`` after is has been marked as ``quarantined``:
 
 .. code-block:: html
-    :emphasize-lines: 5-6
+    :emphasize-lines: 5
 
     <!DOCTYPE html>
     <html>
       <head>
         <meta name="pypi:repository-version" content="1.4">
-        <meta name="pypi:project-status" content="archived">
         <meta name="pypi:project-status" content="quarantined">
         <title>Links for sampleproject</title>
       </head>
@@ -201,26 +206,21 @@ The following changes are made to the
 :ref:`JSON simple index <packaging:simple-repository-api-json>`:
 
 * The index **SHALL** define the ``meta.api-version`` as ``1.4``.
-* When a project has one or more statuses, the index **SHALL** add each status
-  to the ``project-status`` key in the JSON response. When no statuses
-  are present, the ``project-status`` key **MAY** be omitted entirely,
-  left as `null`, or as an empty array.
+* The index **SHOULD** include a ``project-status`` key in the JSON response,
+  with a value of the project's status marker. The index **MAY** choose to omit
+  the ``project-status`` key if the project is marked as ``active``.
 
 For example, the following would be a valid JSON index response for
-``sampleproject`` after is has been marked as both ``archived`` and
-``quarantined``:
+``sampleproject`` after is has been marked as ``quarantined``:
 
 .. code-block:: json
-    :emphasize-lines: 5-8
+    :emphasize-lines: 5
 
     {
       "meta": {
         "api-version": "1.4"
       },
-      "project-status": [
-        "archived",
-        "quarantined"
-      ],
+      "project-status": "quarantined",
       "alternate-locations": [],
       "files": [],
       "name": "sampleproject",
@@ -240,7 +240,7 @@ distribution links for the ``quarantined`` project.
 Future Considerations
 =====================
 
-This PEP defines only three project status markers: ``archived``,
+This PEP defines only four project status markers: ``active``, ``archived``,
 ``quarantined``, and ``deprecated``.
 
 Future PEPs (or PyPA standards processes) may define additional project
@@ -305,16 +305,13 @@ says the following:
 In effect, this means that the following would be standards-compliant:
 
 .. code-block:: json
-    :emphasize-lines: 5-8
+    :emphasize-lines: 5
 
     {
       "meta": {
         "api-version": "1.4"
       },
-      "_project-status": [
-        "archived",
-        "quarantined"
-      ],
+      "_project-status": "quarantined",
       "alternate-locations": [],
       "files": [],
       "name": "sampleproject",
@@ -351,6 +348,20 @@ or similar key without needing a PEP or underscore prefix.
 This has similar drawbacks as the "reserved" keys approach above,
 and more generally deepens the differences between the standard
 and non-standard APIs.
+
+Multiple project status markers at once
+---------------------------------------
+
+An earlier version of this PEP considered proposing support for
+multiple project markers at once. For example, a project could be marked
+as both ``archived`` and ``quarantined``.
+
+After consideration, this was rejected for complexity reasons: having multiple
+project status markers requires the PEP to specify a conflict resolution
+mechanism when merging their semantics, as well as as state machine for which
+markers are exclusive (for example, ``active`` is conceptually exclusive with
+all other markers, while ``archived`` and ``quarantined`` are conceptually
+compatible with each other).
 
 Copyright
 =========
